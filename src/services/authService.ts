@@ -5,7 +5,7 @@ export const authService = {
     try {
       const response = await api.post('/login', { email, password });
       return response.data;
-    } catch (error) {
+    } catch {
       throw new Error('Invalid credentials');
     }
   }
