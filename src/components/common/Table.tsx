@@ -13,6 +13,7 @@ interface TableProps<T> {
   onEdit?: (item: T) => void;
   onDelete?: (item: T) => void;
   isLoading?: boolean;
+  onView?: (item: T) => void;
 }
 
 export default function Table<T extends { id: number }>({ 
@@ -20,6 +21,7 @@ export default function Table<T extends { id: number }>({
   data, 
   onEdit, 
   onDelete,
+  onView,
   isLoading = false,
 }: TableProps<T>) {
 
@@ -69,6 +71,16 @@ export default function Table<T extends { id: number }>({
                     {column.render ? column.render(item) : String(item[column.accessor])}
                   </td>
                 ))}
+                {onView && (
+                  <td className="px-6 py-4 whitespace-nowrap text-right text-sm">
+                  <button
+                    onClick={() => onView(item)}
+                    className="text-gray-600 hover:text-gray-900 mr-4"
+                  >
+                    View
+                  </button>
+                  </td>
+                )}
                 {(onEdit || onDelete) && (
                   <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                     {onEdit && (
