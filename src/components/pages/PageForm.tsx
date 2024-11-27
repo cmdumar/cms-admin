@@ -53,64 +53,95 @@ export default function PageForm({ page, onClose, onSuccess }: PageFormProps) {
 
   return (
     <div className="w-full">
-      <div className="mb-4">
-        <h3 className="text-lg font-semibold leading-6 text-gray-900">
-          {page ? 'Edit Page' : 'Create New Page'}
-        </h3>
-      </div>
+      <div className="flex min-h-full items-center justify-center p-4">
+          <div className="bg-white rounded-lg shadow-xl w-full max-w-2xl">
+            {/* Header */}
+            <div className="px-6 py-4 border-b border-gray-200 flex items-center justify-between">
+              <h2 className="text-xl font-semibold text-gray-900">
+                {page ? 'Edit Page' : 'Create New Page'}
+              </h2>
+              <button
+                onClick={onClose}
+                className="text-gray-400 hover:text-gray-500 focus:outline-none"
+              >
+                <span className="sr-only">Close</span>
+                <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
+            </div>
 
-      {error && (
-        <div className="mb-4 rounded-md bg-red-50 p-4">
-          <div className="text-sm text-red-700">{error}</div>
-        </div>
-      )}
+            {/* Form Content */}
+            <div className="px-6 py-4">
+              {error && (
+                <div className="mb-4 rounded-md bg-red-50 p-4">
+                  <div className="flex">
+                    <div className="ml-3">
+                      <p className="text-sm font-medium text-red-800">{error}</p>
+                    </div>
+                  </div>
+                </div>
+              )}
 
-      <form onSubmit={handleSubmit} className="space-y-4">
-        <div>
-          <label htmlFor="title" className="block text-sm font-medium text-gray-700">
-            Title
-          </label>
-          <input
-            type="text"
-            id="title"
-            value={formData.title}
-            onChange={(e) => setFormData(prev => ({ ...prev, title: e.target.value }))}
-            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
-            required
-          />
-        </div>
+              <form id="page-form" onSubmit={handleSubmit} className="space-y-6">
+                <div>
+                  <label htmlFor="title" className="block text-sm font-medium text-gray-700">
+                    Title
+                  </label>
+                  <div className="mt-1">
+                    <input
+                      type="text"
+                      id="title"
+                      name="title"
+                      value={formData.title}
+                      onChange={(e) => setFormData(prev => ({ ...prev, title: e.target.value }))}
+                      className="block w-full rounded-md text-black border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm px-2 py-2"
+                      placeholder="Enter page title"
+                      required
+                    />
+                  </div>
+                </div>
 
-        <div>
-          <label htmlFor="body" className="block text-sm font-medium text-gray-700">
-            Content
-          </label>
-          <textarea
-            id="body"
-            rows={8}
-            value={formData.body}
-            onChange={(e) => setFormData(prev => ({ ...prev, body: e.target.value }))}
-            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
-            required
-          />
-        </div>
+                <div>
+                  <label htmlFor="body" className="block text-sm font-medium text-gray-700">
+                    Content
+                  </label>
+                  <div className="mt-1">
+                    <textarea
+                      id="body"
+                      name="body"
+                      rows={8}
+                      value={formData.body}
+                      onChange={(e) => setFormData(prev => ({ ...prev, body: e.target.value }))}
+                      className="block w-full text-black rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm px-2 py-2"
+                      placeholder="Enter page content"
+                      required
+                    />
+                  </div>
+                </div>
+              </form>
+            </div>
 
-        <div className="mt-5 sm:mt-6 sm:flex sm:flex-row-reverse">
-          <button
-            type="submit"
-            disabled={loading}
-            className="inline-flex w-full justify-center rounded-md bg-blue-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-blue-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 sm:ml-3 sm:w-auto"
-          >
-            {loading ? 'Saving...' : 'Save'}
-          </button>
-          <button
-            type="button"
-            onClick={onClose}
-            className="mt-3 inline-flex w-full justify-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 sm:mt-0 sm:w-auto"
-          >
-            Cancel
-          </button>
+            {/* Footer */}
+            <div className="px-6 py-4 bg-gray-50 border-t border-gray-200 flex justify-end space-x-3">
+              <button
+                type="button"
+                onClick={onClose}
+                className="rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+              >
+                Cancel
+              </button>
+              <button
+                type="submit"
+                form="page-form"
+                disabled={loading}
+                className="inline-flex items-center rounded-md border border-transparent bg-blue-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-50"
+              >
+                {loading ? 'Saving...' : 'Save'}
+              </button>
+            </div>
+          </div>
         </div>
-      </form>
     </div>
   );
 }
