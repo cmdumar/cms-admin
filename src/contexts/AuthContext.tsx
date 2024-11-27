@@ -1,41 +1,38 @@
-"use client";
+"use client"
 import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import { useRouter } from 'next/navigation';
-import AuthService from '@/services/authService';
+import Cookies from 'js-cookie';  // Install with: npm install js-cookie @types/js-cookie
 
 interface AuthContextType {
   isAuthenticated: boolean;
-  // loading: boolean;
   login: (token: string) => void;
   logout: () => void;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
-interface AuthContextType {
- isAuthenticated: boolean;
- login: (token: string) => void;
- logout: () => void;
-}
-
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const router = useRouter();
 
   useEffect(() => {
-    const token = AuthService.getToken();
+    const token = Cookies.get('token');
     if (token) {
       setIsAuthenticated(true);
     }
   }, []);
 
   const login = (token: string) => {
-    AuthService.saveToken(token);
+    // Set cookie with token
+    Cookies.set('token', token, { path: '/' });
+    localStorage.setItem('token', token);
     setIsAuthenticated(true);
+    router.push('/dashboard');
   };
 
   const logout = () => {
-    AuthService.removeToken();
+    Cookies.remove('token');
+    localStorage.removeItem('token');
     setIsAuthenticated(false);
     router.push('/auth/login');
   };
@@ -49,7 +46,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
 export const useAuth = () => {
   const context = useContext(AuthContext);
-  if (context === undefined) {
+  if (!context) {
     throw new Error('useAuth must be used within an AuthProvider');
   }
   return context;

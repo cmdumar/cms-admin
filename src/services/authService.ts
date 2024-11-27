@@ -1,23 +1,12 @@
-// src/services/authService.ts
-class AuthService {
-  static saveToken(token: string) {
-    if (typeof window !== 'undefined') {
-      localStorage.setItem('token', token);
+import api from './api';
+
+export const authService = {
+  login: async (email: string, password: string) => {
+    try {
+      const response = await api.post('/login', { email, password });
+      return response.data;
+    } catch {
+      throw new Error('Invalid credentials');
     }
   }
-
-  static getToken() {
-    if (typeof window !== 'undefined') {
-      return localStorage.getItem('token');
-    }
-    return null;
-  }
-
-  static removeToken() {
-    if (typeof window !== 'undefined') {
-      localStorage.removeItem('token');
-    }
-  }
-}
-
-export default AuthService;
+};
