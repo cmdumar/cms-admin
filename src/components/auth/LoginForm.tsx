@@ -1,6 +1,7 @@
 "use client"
 import { FormEvent, useState } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
+import router from 'next/router';
 import { authService } from '@/services/authService';
 
 export default function LoginForm() {
@@ -18,10 +19,7 @@ export default function LoginForm() {
     try {
       const response = await authService.login(email, password);
       login(response.token);
-      
-      // Use window.location instead of router
-      window.location.href = '/dashboard';
-      
+      router.push('/dashboard');
     } catch (err) {
       console.error('Login error:', err);
       setError('Invalid credentials');

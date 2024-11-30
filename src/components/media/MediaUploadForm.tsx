@@ -109,7 +109,7 @@ export default function MediaUploadForm({ onClose, onSuccess }: MediaUploadFormP
                     type="text"
                     value={slug}
                     onChange={(e) => setSlug(e.target.value)}
-                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
+                    className="mt-1 block w-full rounded-md text-gray-900 border-gray-600 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm p-2"
                     placeholder="Enter custom slug"
                   />
                 </div>

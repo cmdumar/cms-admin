@@ -4,6 +4,8 @@ import { useState, useEffect } from 'react';
 import DashboardLayout from '@/components/layouts/DashboardLayout';
 import MediaUploadForm from '@/components/media/MediaUploadForm';
 import { mediaService } from '@/services/mediaService';
+import Image from 'next/image';
+import AddSlugModal from '@/components/media/AddSlugModal';
 
 interface MediaFile {
   id: number;
@@ -20,6 +22,7 @@ export default function MediaPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [showUploadForm, setShowUploadForm] = useState(false);
+  const [showSlugModal, setShowSlugModal] = useState(false);
   const [selectedFile, setSelectedFile] = useState<MediaFile | null>(null);
 
   useEffect(() => {
@@ -31,7 +34,7 @@ export default function MediaPage() {
       const data = await mediaService.getAll();
       setFiles(data);
       setError(null);
-    } catch (err) {
+    } catch {
       setError('Failed to load media files');
     } finally {
       setLoading(false);
@@ -43,7 +46,7 @@ export default function MediaPage() {
       try {
         await mediaService.delete(file.id);
         setFiles(files.filter(f => f.id !== file.id));
-      } catch (err) {
+      } catch {
         setError('Failed to delete file');
       }
     }
@@ -94,20 +97,25 @@ export default function MediaPage() {
               >
                 {/* Preview */}
                 <div className="aspect-w-1 aspect-h-1 w-full overflow-hidden rounded-t-lg bg-gray-100">
-                  {file.mime_type.startsWith('image/') ? (
-                    <img
-                      src={`http://localhost:8000/storage/${file.file_path}`}
+                {file.mime_type.startsWith('image/') ? (
+                  <div className="relative w-full h-48">
+                    <Image
+                      src={`http://localhost:8000/media/${file.file_path}`}
                       alt={file.original_name}
-                      className="object-cover w-full h-full"
+                      fill
+                      sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                      className="object-cover"
+                      unoptimized
                     />
-                  ) : (
-                    <div className="flex items-center justify-center h-full">
-                      <svg className="h-12 w-12 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
-                      </svg>
-                    </div>
-                  )}
-                </div>
+                  </div>
+                ) : (
+                  <div className="flex items-center justify-center h-full">
+                    <svg className="h-12 w-12 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
+                    </svg>
+                  </div>
+                )}
+              </div>
 
                 {/* File Info */}
                 <div className="p-4">
@@ -129,7 +137,19 @@ export default function MediaPage() {
                 {/* Actions */}
                 <div className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
                   <button
-                    onClick={() => window.open(`http://localhost:8000/storage/${file.file_path}`, '_blank')}
+                    onClick={() => {
+                      setSelectedFile(file);
+                      setShowSlugModal(true);
+                    }}
+                    className="p-1 bg-white rounded-full shadow-sm hover:bg-gray-50 mr-1"
+                    title="Add Slug"
+                  >
+                    <svg className="h-4 w-4 text-gray-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+                    </svg>
+                  </button>
+                  <button
+                    onClick={() => window.open(`http://localhost:8000/media/${file.file_path}`, '_blank')}
                     className="p-1 bg-white rounded-full shadow-sm hover:bg-gray-50 mr-1"
                     title="View"
                   >
@@ -159,6 +179,19 @@ export default function MediaPage() {
             onSuccess={() => {
               loadFiles();
               setShowUploadForm(false);
+            }}
+          />
+        )}
+
+        {showSlugModal && selectedFile && (
+          <AddSlugModal
+            mediaId={selectedFile.id}
+            onClose={() => {
+              setShowSlugModal(false);
+              setSelectedFile(null);
+            }}
+            onSuccess={() => {
+              loadFiles(); // Refresh the file list
             }}
           />
         )}
