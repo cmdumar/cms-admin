@@ -1,7 +1,7 @@
 "use client"
 import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import { useRouter } from 'next/navigation';
-import Cookies from 'js-cookie';  // Install with: npm install js-cookie @types/js-cookie
+import Cookies from 'js-cookie';
 
 interface AuthContextType {
   isAuthenticated: boolean;
@@ -12,18 +12,21 @@ interface AuthContextType {
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export function AuthProvider({ children }: { children: ReactNode }) {
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(null);  // Set initial state to null for proper hydration handling
+  const [loading, setLoading] = useState(true);  // Loading state to manage the client-side rendering
   const router = useRouter();
 
   useEffect(() => {
     const token = Cookies.get('token');
     if (token) {
       setIsAuthenticated(true);
+    } else {
+      setIsAuthenticated(false);
     }
+    setLoading(false); // Set loading to false after checking the cookie
   }, []);
 
   const login = (token: string) => {
-    // Set cookie with token
     Cookies.set('token', token, { path: '/' });
     localStorage.setItem('token', token);
     setIsAuthenticated(true);
@@ -37,8 +40,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     router.push('/auth/login');
   };
 
+  // Prevent rendering the context until hydration has finished
+  if (loading) {
+    return null;  // Or return a loading spinner or any other fallback UI
+  }
+
   return (
-    <AuthContext.Provider value={{ isAuthenticated, login, logout }}>
+    <AuthContext.Provider value={{ isAuthenticated: isAuthenticated ?? false, login, logout }}>
       {children}
     </AuthContext.Provider>
   );

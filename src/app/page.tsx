@@ -42,7 +42,7 @@ export default function Home() {
             key={page.id}
             className="block p-6 bg-white rounded-lg shadow hover:shadow-md transition-shadow"
           >
-            <h2 className="text-xl font-semibold mb-2">{page.title}</h2>
+            <h2 className="text-xl font-semibold mb-2 text-gray-900 capitalize">{page.title}</h2>
             <p className="text-gray-600 line-clamp-3">{page.body}</p>
           </Link>
         ))}
