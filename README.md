@@ -5,25 +5,24 @@
 - Install node modules `npm install`
 - Create `.env` file in project's root directory
 - Copy contents of `.env.example` to `.env`
-- Run `docker-compose up --build` to start the project
-
-First, run the development server:
-
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+- Make sure to run `docker network create app_network` if not already while setting up the Laravel app
+- Run the development server `docker-compose up --build` to start the project
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### Available Routes
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+#### Public routes
+- Homepage with created pages - `http://localhost:3000/`
+- Media page - `http://localhost:3000/media/`
+- Specific page - `http://localhost:3000/[id]/` (after creating a page)
+
+#### Admin Routes
+- Dashboard - `http://localhost:3000/dashboard`
+- Login - `http://localhost:3000/auth/login`
+- Signup - `http://localhost:3000/auth/register`
+- Add pages - `http://localhost:3000/dashboard/pages`
+- Add images - `http://localhost:3000/dashboard/media`
 
 ## Learn More
 
