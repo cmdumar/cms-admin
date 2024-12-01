@@ -44,7 +44,7 @@ export default function DashboardLayout({
                     <span className="text-sm font-medium text-gray-600">A</span>
                   </span>
                   <span className="hidden sm:flex sm:items-center">
-                    <span className="text-sm font-medium text-gray-700">Admin User</span>
+                    <span className="text-sm font-medium text-gray-700">User</span>
                   </span>
                 </button>
                 
