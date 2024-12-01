@@ -19,7 +19,6 @@ export default function MediaGallery() {
       try {
         const response = await axios.get('http://localhost:8000/api/v1/media');
         setFiles(response.data.data);
-        console.log('Executed');
       } catch (error) {
         console.error('Error fetching media:', error);
       } finally {
@@ -34,12 +33,19 @@ export default function MediaGallery() {
     return <div className="p-8">Loading...</div>;
   }
 
+  const imageFiles = files.filter(file => file.mime_type.startsWith('image/'));
+
   return (
     <main className="container mx-auto p-8">
       <h1 className="text-3xl font-bold mb-8">Media Gallery</h1>
-      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-        {files.map((file) => (
-          file.mime_type.startsWith('image/') && (
+      
+      {imageFiles.length === 0 ? (
+        <div className="text-center py-12 bg-gray-50 rounded-lg">
+          <p className="text-gray-600">No media files found</p>
+        </div>
+      ) : (
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+          {imageFiles.map((file) => (
             <div key={file.id} className="aspect-square relative rounded-lg overflow-hidden">
               <Image
                 src={`http://localhost:8000/media/${file.file_path}`}
@@ -50,9 +56,9 @@ export default function MediaGallery() {
                 unoptimized
               />
             </div>
-          )
-        ))}
-      </div>
+          ))}
+        </div>
+      )}
     </main>
   );
 }
