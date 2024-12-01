@@ -35,18 +35,24 @@ export default function Home() {
   return (
     <main className="container mx-auto p-8">
       <h1 className="text-3xl font-bold mb-8">Pages</h1>
-      <div className="grid gap-6">
-        {pages.map((page) => (
-          <Link 
-            href={`/${page.id}`} 
-            key={page.id}
-            className="block p-6 bg-white rounded-lg shadow hover:shadow-md transition-shadow"
-          >
-            <h2 className="text-xl font-semibold mb-2 text-gray-900 capitalize">{page.title}</h2>
-            <p className="text-gray-600 line-clamp-3">{page.body}</p>
-          </Link>
-        ))}
-      </div>
+      {pages.length === 0 ? (
+        <div className="p-6 bg-white rounded-lg shadow text-center text-gray-600">
+          No page found
+        </div>
+      ) : (
+        <div className="grid gap-6">
+          {pages.map((page) => (
+            <Link 
+              href={`/${page.id}`} 
+              key={page.id}
+              className="block p-6 bg-white rounded-lg shadow hover:shadow-md transition-shadow"
+            >
+              <h2 className="text-xl font-semibold mb-2 text-gray-900 capitalize">{page.title}</h2>
+              <p className="text-gray-600 line-clamp-3">{page.body}</p>
+            </Link>
+          ))}
+        </div>
+      )}
     </main>
   );
 }
