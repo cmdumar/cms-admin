@@ -1,28 +1,25 @@
-async function getPage(id: string) {
-  try {
-    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/pages/${id}`, {
-      next: { revalidate: 60 },
-      headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json',
-      }
-    });
+import type { Page, PagesResponse, PageParams } from '@/types/page';
 
-    if (!response.ok) {
-      throw new Error(`Failed to fetch page data`);
-    }
+// Generate static paths
+export async function generateStaticParams() {
+  // Get all page IDs from API
+  const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/pages`);
+  const { data: pages }: PagesResponse = await response.json();
 
-    return response.json();
-  } catch (error) {
-    console.error('Error fetching page:', error);
-    throw error;
-  }
+  return pages.map((page: Page) => ({
+    id: page.id.toString(),
+  }));
 }
 
-export default async function Page({ params }: { params: { id: string } }) {
+// Set up revalidation for the page
+export const revalidate = 60; // revalidate every 60 seconds
+
+export default async function Page({ params }: { params: PageParams }) {
   const resolvedParams = await Promise.resolve(params);
+
   try {
-    const { data: page } = await getPage(resolvedParams.id);
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/pages/${resolvedParams.id}`);
+    const { data: page } = await response.json();
 
     return (
       <main className="container mx-auto p-8">

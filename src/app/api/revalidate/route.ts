@@ -18,7 +18,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Revalidate the specific path
-    revalidatePath(path);
+    revalidatePath(path); // Triggers ISR regeneration
 
     // Uncomment to see the revalidation success message
     // console.log('Successfully revalidated path:', path);
