@@ -1,6 +1,11 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+### Note: First setup the [backend Laravel application](https://github.com/cmdumar/laravel-cms) before running this project.
 
-## Getting Started
+## Steps to run the project
+
+- Install node modules `npm install`
+- Create `.env` file in project's root directory
+- Copy contents of `.env.example` to `.env`
+- Run `docker-compose up --build` to start the project
 
 First, run the development server:
 
