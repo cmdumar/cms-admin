@@ -1,25 +1,32 @@
-import type { Page, PagesResponse, PageParams } from '@/types/page';
-
-// Generate static paths
-export async function generateStaticParams() {
-  // Get all page IDs from API
-  const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/pages`);
-  const { data: pages }: PagesResponse = await response.json();
-
-  return pages.map((page: Page) => ({
-    id: page.id.toString(),
-  }));
-}
+import type { Page, PageParams } from '@/types/page';
 
 // Set up revalidation for the page
 export const revalidate = 60; // revalidate every 60 seconds
+
+async function getPage(id: string) {
+  try {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/pages/${id}`, {
+      next: { revalidate }
+    });
+
+    console.log('Done');
+
+    if (!response.ok) {
+      throw new Error('Failed to fetch page');
+    }
+
+    return response.json();
+  } catch (error) {
+    console.log('Error', error);
+    throw error;
+  }
+}
 
 export default async function Page({ params }: { params: PageParams }) {
   const resolvedParams = await Promise.resolve(params);
 
   try {
-    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/pages/${resolvedParams.id}`);
-    const { data: page } = await response.json();
+    const { data: page } = await getPage(resolvedParams.id);
 
     return (
       <main className="container mx-auto p-8">
@@ -29,7 +36,8 @@ export default async function Page({ params }: { params: PageParams }) {
         </article>
       </main>
     );
-  } catch {
+  } catch (error) {
+    console.error('Error', error);
     return (
       <div className="container mx-auto p-8">
         <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded">
