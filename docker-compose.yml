@@ -4,4 +4,11 @@ services:
     ports:
       - "3000:3000"
     environment:
-      - NEXT_PUBLIC_API_URL=http://localhost:8000/api
+      - NEXT_PUBLIC_API_URL=http://laravel:8000/api/v1
+    networks:
+      - app_network
+
+networks:
+  app_network:
+    name: cms-backend_app_network  # Use the network name created by Laravel container
+    external: true
