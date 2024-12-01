@@ -6,7 +6,11 @@ export async function POST(request: NextRequest) {
     const body = await request.json();
     const { path } = body;
 
+    // Uncomment to see the revalidation request
+    // console.log('Received revalidation request for path:', path);
+
     if (!path) {
+      console.error('No path provided');
       return NextResponse.json(
         { message: 'Path parameter is required' },
         { status: 400 }
@@ -15,6 +19,9 @@ export async function POST(request: NextRequest) {
 
     // Revalidate the specific path
     revalidatePath(path);
+
+    // Uncomment to see the revalidation success message
+    // console.log('Successfully revalidated path:', path);
 
     return NextResponse.json({ 
       revalidated: true,

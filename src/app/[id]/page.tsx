@@ -1,4 +1,3 @@
-// src/app/[id]/page.tsx
 async function getPage(id: string) {
   try {
     const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/pages/${id}`, {
